@@ -1,0 +1,17 @@
+/* Write your CSS here */
+.app-item-container {
+  text-align: center;
+  margin: 20px;
+  background-color: #dfe2e5;
+  padding: 20px;
+  border-radius: 10px;
+}
+.image {
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+}
+.heading {
+  font-size: 18px;
+  font-family: Bree Serif;
+}
