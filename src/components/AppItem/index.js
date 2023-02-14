@@ -1,4 +1,3 @@
-// Write your code here
 import './index.css'
 
 const AppItem = props => {
@@ -6,12 +5,10 @@ const AppItem = props => {
   const {appName, imageUrl} = appDetails
 
   return (
-    <>
-      <li className="app-item-container">
-        <img src={imageUrl} alt={appName} className="image" />
-        <p className="heading">{appName}</p>
-      </li>
-    </>
+    <li className="app-item">
+      <img className="app-image" src={imageUrl} alt={appName} />
+      <p className="app-name">{appName}</p>
+    </li>
   )
 }
 

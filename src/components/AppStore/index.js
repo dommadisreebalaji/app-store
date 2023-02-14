@@ -1,7 +1,12 @@
 import {Component} from 'react'
-import './index.css'
-import TabItem from '../TabItem'
+
 import AppItem from '../AppItem'
+import TabItem from '../TabItem'
+
+import './index.css'
+
+const SEARCH_ICON_URL =
+  'https://assets.ccbp.in/frontend/react-js/app-store/app-store-search-img.png'
 
 const tabsList = [
   {tabId: 'SOCIAL', displayText: 'Social'},
@@ -292,67 +297,77 @@ const appsList = [
   },
 ]
 
-// Write your code here
 class AppStore extends Component {
-  state = {activeTabId: tabsList[0].tabId, searchInput: ''}
-
-  updateActiveTabId = tabValue => {
-    this.setState({activeTabId: tabValue})
+  state = {
+    searchInput: '',
+    activeTabId: tabsList[0].tabId,
   }
 
-  onSearchInput = event => {
+  setActiveTabId = tabId => {
+    this.setState({activeTabId: tabId})
+  }
+
+  onChangeSearchInput = event => {
     this.setState({searchInput: event.target.value})
   }
 
-  getAppList = () => {
+  getActiveTabApps = searchedApps => {
     const {activeTabId} = this.state
-    const filteredAppList = appsList.filter(
-      each => each.category === activeTabId,
+    const filteredApps = searchedApps.filter(
+      eachSearchedApp => eachSearchedApp.category === activeTabId,
     )
-    return filteredAppList
+
+    return filteredApps
+  }
+
+  getSearchResults = () => {
+    const {searchInput} = this.state
+    const searchResults = appsList.filter(eachApp =>
+      eachApp.appName.toLowerCase().includes(searchInput.toLowerCase()),
+    )
+
+    return searchResults
   }
 
   render() {
-    const {activeTabId, searchInput} = this.state
-    const filteredResults = this.getAppList()
-    const searchResults = appsList.filter(each =>
-      each.appName.toLowerCase().includes(searchInput.toLowerCase()),
-    )
-    const filteredAppList =
-      searchInput.length !== 0 ? searchResults : filteredResults
+    const {searchInput, activeTabId} = this.state
+    const searchResults = this.getSearchResults()
+    const filteredApps = this.getActiveTabApps(searchResults)
+
     return (
-      <div className="bg-container">
-        <h1 className="heading">App Store</h1>
-        <div className="search-input-container">
-          <input
-            type="search"
-            className="search-input"
-            placeholder="Search"
-            onChange={this.onSearchInput}
-          />
-          <img
-            src="https://assets.ccbp.in/frontend/react-js/app-store/app-store-search-img.png"
-            alt="search icon"
-            className="search-icon"
-          />
-        </div>
-
-        <ul className="tab-container">
-          {tabsList.map(each => (
-            <TabItem
-              key={each.tabId}
-              tabDetails={each}
-              updateActiveTabId={this.updateActiveTabId}
-              isActive={activeTabId === each.tabId}
+      <div className="app-container">
+        <div className="app-store">
+          <h1 className="heading">App Store</h1>
+          <div className="search-input-container">
+            <input
+              type="search"
+              placeholder="Search"
+              className="search-input"
+              value={searchInput}
+              onChange={this.onChangeSearchInput}
             />
-          ))}
-        </ul>
-
-        <ul className="app-container">
-          {filteredAppList.map(each => (
-            <AppItem key={each.appId} appDetails={each} />
-          ))}
-        </ul>
+            <img
+              src={SEARCH_ICON_URL}
+              alt="search icon"
+              className="search-icon"
+            />
+          </div>
+          <ul className="tabs-list">
+            {tabsList.map(eachTab => (
+              <TabItem
+                key={eachTab.tabId}
+                tabDetails={eachTab}
+                setActiveTabId={this.setActiveTabId}
+                isActive={activeTabId === eachTab.tabId}
+              />
+            ))}
+          </ul>
+          <ul className="apps-list">
+            {filteredApps.map(eachApp => (
+              <AppItem key={eachApp.appId} appDetails={eachApp} />
+            ))}
+          </ul>
+        </div>
       </div>
     )
   }
